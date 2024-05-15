@@ -1,0 +1,72 @@
+.TH P3
+.SH Name
+P3 - File Systems
+.SH Synopsis
+The goal of the project was to create a userspace file system that is based off of a wad file.
+.SH Description
+.SS
+/home/reptilian/p3/libWad
+This file houses all code relevant to the libWad class and library.
+.SS /home/reptilian/p3/libWad/Element.h
+I created this file for the Element class used in the Wad class. Each element contains the information in the descriptor as well as a vector of children.
+.SS /home/reptilian/p3/libWad/Wad.h
+This header file was used to declare the class and its functions as defined in the pdf. I included a map, pointers to objects, and variables to make getting certain information easier.
+.SS /home/reptilian/p3/libWad/Wad.cpp
+This source file was used to define the class functions.
+.PP
+Constructor - reads the entire wad file and separates the data into each descriptor and puts it in the map.
+.PP
+loadWad() - initializes Wad object.
+.PP
+findPath() - loops through the map to check if path is valid.
+.PP
+findPath2() - loops through the map to get the element at that path.
+.PP
+isContent() - breaks down path into parts, then use findPath and findPath2 to ensure that there is content there.
+.PP
+isDirectory() - first calls isContent, if false, it follows the structure of isContent.
+.PP
+getSize() - calls isContent, if true, break down path, and use findPath2 to get element.
+.PP
+getContents() - calls isContent, if true, break down path, and use findPath2 to get element. Put content into buffer and return copied bytes.
+.PP
+getDirectory() - calls isDirectory, if true, break down path and use findPath2 to get element. Put children into vector.
+.PP
+copyFrom() - takes a point in the wad file and copies everything after that point.
+.PP
+copyUpTo() - takes a point in the wad file and copies everything up to that point.
+.PP
+createDirectory() - break down path to see if it is a valid parent directory, if so, see if it's in root or not. If in root, write to the end of the file and change descriptors, if not, loop through wad file to find the correct spot and use copyUpTo and copyFrom to make a new file with new directory information in between.
+.PP
+createFile() - same structure as create directory.
+.PP
+writeToFile() - check if path is a file and if it has size 0, if so, loop through wad file to find insertion point. Use copyUpTo and copyFrom to change everything else.
+.SS /home/reptilian/p3/libWad/makefile
+This makefile contains the commands necessary to build the libWad library.
+.SS /home/reptilian/p3/wadfs/fuse.cpp
+.PP
+getattr() - checks if file is a directory or not and assigns attributes accordingly.
+.PP
+mknod() - calls library function createFile()
+.PP
+mkdir() - calls library function createDirectory()
+.PP
+read() - checks if input is a file, reads the file's data
+.PP
+write() - calls library function writeToFile()
+.PP
+readdir() - checks if input is a directory, pushs contents to buffer
+.SH Testing
+I tested my code by running it with the test files provided in libtest.cpp and on FUSE daemon.
+.SH Bugs
+The Input/Output error when trying to write to files in FUSE.
+.SH Link
+https://youtu.be/OajHcPjkBX4
+.SH References/Citations
+.PP
+ChatGPT - for debugging errors that occured with FUSE and my library functions
+.PP
+Ernesto Mujica - for all of the example code he provided.
+.SH Author
+Jordan Levy
+
